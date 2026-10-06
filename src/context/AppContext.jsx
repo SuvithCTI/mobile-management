@@ -52,12 +52,9 @@ export const AppProvider = ({ children }) => {
   // State initialization
   const [currentUser, setCurrentUser] = useState(() => loadStorage('currentUser', null));
   const [users, setUsers] = useState(() => {
-    const saved = loadStorage('users', initialUsers);
-    if (Array.isArray(saved)) {
-      return initialUsers.map((u) => {
-        const found = saved.find((s) => s.id === u.id);
-        return found ? { ...found, email: u.email, password: u.password, username: u.username } : u;
-      });
+    const saved = loadStorage('users', null);
+    if (Array.isArray(saved) && saved.length > 0) {
+      return saved;
     }
     return initialUsers;
   });
@@ -122,7 +119,12 @@ export const AppProvider = ({ children }) => {
         u.password === password
     );
     if (user) {
+      if (user.status === 'Inactive') {
+        notify('This account is currently disabled/inactive. Please contact the administrator.', 'error');
+        return { success: false, message: 'Account Inactive' };
+      }
       setCurrentUser(user);
+      setActiveTab('dashboard');
       notify(`Welcome back, ${user.name}!`, 'success');
       return { success: true, user };
     }
@@ -132,6 +134,7 @@ export const AppProvider = ({ children }) => {
 
   const logout = () => {
     setCurrentUser(null);
+    setActiveTab('dashboard');
     notify('Logged out successfully', 'info');
   };
 
@@ -144,6 +147,74 @@ export const AppProvider = ({ children }) => {
     };
     setCurrentUser(matchedUser);
     notify(`Switched to ${role} role mode`);
+  };
+
+  // Staff & User Management (Admin Only)
+  const addUser = (userData) => {
+    const cleanEmail = (userData.email || '').trim().toLowerCase();
+    if (!cleanEmail) {
+      notify('Email address is required!', 'error');
+      return { success: false };
+    }
+    if (users.some((u) => u.email?.toLowerCase() === cleanEmail || u.username?.toLowerCase() === cleanEmail)) {
+      notify('A user with this email address already exists!', 'error');
+      return { success: false, message: 'Email already exists' };
+    }
+
+    const newUser = {
+      id: `u-${Date.now()}`,
+      name: userData.name.trim(),
+      email: cleanEmail,
+      username: cleanEmail,
+      password: userData.password,
+      role: userData.role || 'Sales Staff',
+      status: userData.status || 'Active',
+      avatar: userData.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+
+    setUsers((prev) => [...prev, newUser]);
+    notify(`Staff account "${newUser.name}" created!`, 'success');
+    return { success: true, user: newUser };
+  };
+
+  const updateUser = (id, updatedData) => {
+    const cleanEmail = updatedData.email ? updatedData.email.trim().toLowerCase() : undefined;
+    if (cleanEmail && users.some((u) => u.id !== id && (u.email?.toLowerCase() === cleanEmail || u.username?.toLowerCase() === cleanEmail))) {
+      notify('Another user with this email already exists!', 'error');
+      return { success: false, message: 'Email already exists' };
+    }
+
+    setUsers((prev) =>
+      prev.map((u) => {
+        if (u.id === id) {
+          const updated = {
+            ...u,
+            ...updatedData,
+            email: cleanEmail || u.email,
+            username: cleanEmail || u.username || u.email
+          };
+          if (currentUser?.id === id) {
+            setCurrentUser(updated);
+          }
+          return updated;
+        }
+        return u;
+      })
+    );
+    notify('Staff member updated successfully!', 'success');
+    return { success: true };
+  };
+
+  const deleteUser = (id) => {
+    if (currentUser?.id === id) {
+      notify('You cannot delete your own active administrator account!', 'error');
+      return { success: false };
+    }
+    const target = users.find((u) => u.id === id);
+    setUsers((prev) => prev.filter((u) => u.id !== id));
+    notify(`Staff "${target?.name || 'User'}" removed successfully!`, 'info');
+    return { success: true };
   };
 
   // Mobile Handset Management
@@ -527,6 +598,7 @@ export const AppProvider = ({ children }) => {
       if (jsonData.customers) setCustomers(jsonData.customers);
       if (jsonData.sales) setSales(jsonData.sales);
       if (jsonData.purchases) setPurchases(jsonData.purchases);
+      if (jsonData.users) setUsers(jsonData.users);
       notify('Database backup restored successfully!', 'success');
       return true;
     } catch (e) {
@@ -568,6 +640,9 @@ export const AppProvider = ({ children }) => {
         login,
         logout,
         switchRole,
+        addUser,
+        updateUser,
+        deleteUser,
         // Store
         storeSettings,
         setStoreSettings,

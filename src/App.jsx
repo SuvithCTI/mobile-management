@@ -15,6 +15,7 @@ import { Purchases } from './pages/Purchases';
 import { SalesHistory } from './pages/SalesHistory';
 import { Customers } from './pages/Customers';
 import { Reports } from './pages/Reports';
+import { StaffManagement } from './pages/StaffManagement';
 import { Settings } from './pages/Settings';
 
 export const MainApp = () => {
@@ -25,6 +26,8 @@ export const MainApp = () => {
   if (!currentUser) {
     return <Login />;
   }
+
+  const isAdmin = currentUser?.role === 'Admin';
 
   const renderActivePage = () => {
     switch (activeTab) {
@@ -37,15 +40,17 @@ export const MainApp = () => {
       case 'accessories':
         return <Accessories />;
       case 'purchases':
-        return <Purchases />;
+        return isAdmin ? <Purchases /> : <Dashboard onSelectSale={(sale) => setSelectedInvoiceForModal(sale)} />;
       case 'sales':
         return <SalesHistory onSelectSale={(sale) => setSelectedInvoiceForModal(sale)} />;
       case 'customers':
         return <Customers onSelectSale={(sale) => setSelectedInvoiceForModal(sale)} />;
       case 'reports':
-        return <Reports />;
+        return isAdmin ? <Reports /> : <Dashboard onSelectSale={(sale) => setSelectedInvoiceForModal(sale)} />;
+      case 'staff':
+        return isAdmin ? <StaffManagement /> : <Dashboard onSelectSale={(sale) => setSelectedInvoiceForModal(sale)} />;
       case 'settings':
-        return <Settings />;
+        return isAdmin ? <Settings /> : <Dashboard onSelectSale={(sale) => setSelectedInvoiceForModal(sale)} />;
       default:
         return <Dashboard onSelectSale={(sale) => setSelectedInvoiceForModal(sale)} />;
     }

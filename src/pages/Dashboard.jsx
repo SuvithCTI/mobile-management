@@ -85,13 +85,17 @@ export const Dashboard = ({ onSelectSale }) => {
         </div>
       </div>
 
-      {/* 4 Colored Metric Cards */}
+      {/* 4 Colored Metric Cards with Interactive Navigation */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        {/* 1. Sky Blue Card: Revenue */}
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100/70 border border-sky-200 shadow-2xs">
+        {/* 1. Sky Blue Card: Revenue -> Navigates to Sales History */}
+        <div
+          onClick={() => setActiveTab('sales')}
+          title="Click to view Sales History"
+          className="p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100/70 hover:from-sky-100 hover:to-sky-200/70 border border-sky-200 hover:border-sky-400 shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98] group"
+        >
           <div className="flex items-center justify-between text-black mb-1">
-            <span className="text-xs font-bold text-black">Total Revenue</span>
-            <div className="p-1.5 rounded-lg bg-sky-200/90 text-sky-900">
+            <span className="text-xs font-bold text-black group-hover:text-sky-900 transition">Total Revenue</span>
+            <div className="p-1.5 rounded-lg bg-sky-200/90 text-sky-900 group-hover:bg-sky-500 group-hover:text-white transition">
               <TrendingUp className="w-4 h-4 font-bold" />
             </div>
           </div>
@@ -99,16 +103,20 @@ export const Dashboard = ({ onSelectSale }) => {
             {storeSettings.currency}{totalRevenue.toLocaleString()}
           </h3>
           <span className="text-[11px] text-black font-semibold flex items-center gap-0.5 mt-0.5">
-            <ArrowUpRight className="w-3 h-3 text-sky-800 font-bold" />
+            <ArrowUpRight className="w-3 h-3 text-sky-800 font-bold group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             {sales.length} invoices generated
           </span>
         </div>
 
-        {/* 2. Lite Pink Card: Phones In Stock */}
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-50 to-pink-100/70 border border-pink-200 shadow-2xs">
+        {/* 2. Lite Pink Card: Phones In Stock -> Navigates to Mobiles */}
+        <div
+          onClick={() => setActiveTab('mobiles')}
+          title="Click to view Mobiles Inventory"
+          className="p-4 rounded-2xl bg-gradient-to-br from-pink-50 to-pink-100/70 hover:from-pink-100 hover:to-pink-200/70 border border-pink-200 hover:border-pink-400 shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98] group"
+        >
           <div className="flex items-center justify-between text-black mb-1">
-            <span className="text-xs font-bold text-black">Phones In Stock</span>
-            <div className="p-1.5 rounded-lg bg-pink-200/90 text-pink-900">
+            <span className="text-xs font-bold text-black group-hover:text-pink-900 transition">Phones In Stock</span>
+            <div className="p-1.5 rounded-lg bg-pink-200/90 text-pink-900 group-hover:bg-pink-500 group-hover:text-white transition">
               <Smartphone className="w-4 h-4" />
             </div>
           </div>
@@ -118,11 +126,15 @@ export const Dashboard = ({ onSelectSale }) => {
           <span className="text-[11px] text-black font-semibold mt-0.5 block">{mobiles.length} phone models</span>
         </div>
 
-        {/* 3. Lite Red / Rose Card: Accessories */}
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100/70 border border-rose-200 shadow-2xs">
+        {/* 3. Lite Red / Rose Card: Accessories -> Navigates to Accessories */}
+        <div
+          onClick={() => setActiveTab('accessories')}
+          title="Click to view Accessories Catalog"
+          className="p-4 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100/70 hover:from-rose-100 hover:to-rose-200/70 border border-rose-200 hover:border-rose-400 shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98] group"
+        >
           <div className="flex items-center justify-between text-black mb-1">
-            <span className="text-xs font-bold text-black">Accessories Stock</span>
-            <div className="p-1.5 rounded-lg bg-rose-200/90 text-rose-900">
+            <span className="text-xs font-bold text-black group-hover:text-rose-900 transition">Accessories Stock</span>
+            <div className="p-1.5 rounded-lg bg-rose-200/90 text-rose-900 group-hover:bg-rose-500 group-hover:text-white transition">
               <Headphones className="w-4 h-4" />
             </div>
           </div>
@@ -132,11 +144,15 @@ export const Dashboard = ({ onSelectSale }) => {
           <span className="text-[11px] text-black font-semibold mt-0.5 block">Ready for sale</span>
         </div>
 
-        {/* 4. Refined Grey Card: Registered Accounts */}
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-300 shadow-2xs">
+        {/* 4. Refined Grey Card: Registered Accounts -> Navigates to Customers */}
+        <div
+          onClick={() => setActiveTab('customers')}
+          title="Click to view Registered Customers"
+          className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 hover:from-slate-100 hover:to-slate-200 border border-slate-300 hover:border-slate-400 shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98] group"
+        >
           <div className="flex items-center justify-between text-black mb-1">
-            <span className="text-xs font-bold text-black">Registered Accounts</span>
-            <div className="p-1.5 rounded-lg bg-slate-200 text-black">
+            <span className="text-xs font-bold text-black group-hover:text-slate-900 transition">Registered Accounts</span>
+            <div className="p-1.5 rounded-lg bg-slate-200 text-black group-hover:bg-slate-700 group-hover:text-white transition">
               <Users className="w-4 h-4" />
             </div>
           </div>
