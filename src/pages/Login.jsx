@@ -20,19 +20,19 @@ export const Login = () => {
   const { login, storeSettings } = useApp();
 
   const [portal, setPortal] = useState('Admin'); // 'Admin' | 'Sales Staff'
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('password123');
+  const [username, setUsername] = useState('admin@gmail.com');
+  const [password, setPassword] = useState('Admin@123');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handlePortalSwitch = (selectedRole) => {
     setPortal(selectedRole);
     if (selectedRole === 'Admin') {
-      setUsername('admin');
-      setPassword('password123');
+      setUsername('admin@gmail.com');
+      setPassword('Admin@123');
     } else {
-      setUsername('staff');
-      setPassword('password123');
+      setUsername('staff@gmail.com');
+      setPassword('Staff@123');
     }
   };
 
@@ -143,19 +143,19 @@ export const Login = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3.5">
-            {/* Username Input */}
+            {/* Email Input */}
             <div>
               <label className="block font-bold text-black mb-1">
-                {isAdmin ? 'Admin Username' : 'Staff Username'}
+                {isAdmin ? 'Admin Email' : 'Staff Email'}
               </label>
               <div className="relative">
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
-                  type="text"
+                  type="email"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder={isAdmin ? 'admin' : 'staff or sales'}
+                  placeholder={isAdmin ? 'admin@gmail.com' : 'staff@gmail.com'}
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-black font-bold text-xs focus:outline-none focus:border-sky-500 focus:bg-white shadow-2xs font-mono"
                 />
               </div>

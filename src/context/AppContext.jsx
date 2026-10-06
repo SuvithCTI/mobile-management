@@ -50,8 +50,17 @@ export const AppProvider = ({ children }) => {
   };
 
   // State initialization
-  const [currentUser, setCurrentUser] = useState(() => loadStorage('currentUser', initialUsers[0]));
-  const [users, setUsers] = useState(() => loadStorage('users', initialUsers));
+  const [currentUser, setCurrentUser] = useState(() => loadStorage('currentUser', null));
+  const [users, setUsers] = useState(() => {
+    const saved = loadStorage('users', initialUsers);
+    if (Array.isArray(saved)) {
+      return initialUsers.map((u) => {
+        const found = saved.find((s) => s.id === u.id);
+        return found ? { ...found, email: u.email, password: u.password, username: u.username } : u;
+      });
+    }
+    return initialUsers;
+  });
   const [storeSettings, setStoreSettings] = useState(() => loadStorage('settings', initialStoreSettings));
   const [brands, setBrands] = useState(() => loadStorage('brands', initialBrands));
   const [categories, setCategories] = useState(() => loadStorage('categories', initialCategories));
@@ -101,17 +110,23 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Authentication Helpers
-  const login = (username, password) => {
+  // Authentication Helpers (supports email or username matching)
+  const login = (identifier, password) => {
+    const cleanId = (identifier || '').trim().toLowerCase();
     const user = users.find(
-      (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+      (u) =>
+        (u.email?.toLowerCase() === cleanId ||
+         u.username?.toLowerCase() === cleanId ||
+         (cleanId === 'admin' && u.role === 'Admin') ||
+         (cleanId === 'staff' && u.role === 'Sales Staff')) &&
+        u.password === password
     );
     if (user) {
       setCurrentUser(user);
       notify(`Welcome back, ${user.name}!`, 'success');
       return { success: true, user };
     }
-    notify('Invalid username or password', 'error');
+    notify('Invalid email or password', 'error');
     return { success: false };
   };
 

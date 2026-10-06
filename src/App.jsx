@@ -52,7 +52,7 @@ export const MainApp = () => {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-800 overflow-hidden font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="flex h-screen h-[100dvh] bg-slate-50 text-slate-800 overflow-hidden font-sans selection:bg-indigo-500 selection:text-white">
       {/* Sidebar Navigation (Desktop & Mobile Drawer) */}
       <Sidebar
         isMobileOpen={isMobileSidebarOpen}
@@ -60,10 +60,10 @@ export const MainApp = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden h-full">
         <Header onToggleMobileMenu={() => setIsMobileSidebarOpen((prev) => !prev)} />
 
-        <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-7">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-7 overscroll-contain touch-pan-y">
           <div className="max-w-7xl mx-auto">{renderActivePage()}</div>
         </main>
       </div>

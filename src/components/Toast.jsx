@@ -8,7 +8,7 @@ export const ToastContainer = () => {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-md w-full pointer-events-none">
+    <div className="hidden sm:flex fixed bottom-5 right-5 z-50 flex-col gap-2.5 max-w-md w-full pointer-events-none">
       {toasts.map((toast) => (
         <div
           key={toast.id}
@@ -28,7 +28,7 @@ export const ToastContainer = () => {
           </div>
           <button
             onClick={() => removeToast(toast.id)}
-            className="p-1 hover:bg-black/5 rounded-lg transition-colors ml-2 text-slate-500 hover:text-slate-800"
+            className="p-1 hover:bg-black/5 rounded-lg transition-colors ml-2 text-slate-500 hover:text-slate-800 cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>

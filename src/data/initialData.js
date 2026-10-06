@@ -417,21 +417,21 @@ export const initialPurchases = [
 export const initialUsers = [
   {
     id: "u-1",
-    name: "Alex Vance",
-    username: "admin",
-    password: "password123",
+    name: "Store Admin",
+    username: "admin@gmail.com",
+    email: "admin@gmail.com",
+    password: "Admin@123",
     role: "Admin",
-    email: "admin@mobipulse.com",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
     status: "Active"
   },
   {
     id: "u-2",
-    name: "Rohan Patel",
-    username: "sales",
-    password: "password123",
+    name: "Sales Staff",
+    username: "staff@gmail.com",
+    email: "staff@gmail.com",
+    password: "Staff@123",
     role: "Sales Staff",
-    email: "rohan@mobipulse.com",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
     status: "Active"
   }

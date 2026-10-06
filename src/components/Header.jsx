@@ -7,7 +7,7 @@ export const Header = ({ onToggleMobileMenu }) => {
   const { currentUser, setActiveTab, storeSettings } = useApp();
 
   return (
-    <header className="h-14 bg-[#701F47] text-white border-b border-[#5c193a] px-3.5 sm:px-6 flex items-center justify-between z-30 sticky top-0 shadow-md">
+    <header className="h-14 bg-[#701F47] text-white border-b border-[#5c193a] px-3 sm:px-6 flex items-center justify-between z-40 sticky top-0 shrink-0 w-full shadow-md">
       {/* Left: Mobile Menu Toggle & Brand Name */}
       <div className="flex items-center gap-2.5 min-w-0">
         <button

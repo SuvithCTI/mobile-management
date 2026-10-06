@@ -9,7 +9,6 @@ import {
   Receipt,
   Users,
   BarChart3,
-  Settings,
   LogOut,
   PackagePlus,
   X
@@ -27,7 +26,6 @@ export const Sidebar = ({ isMobileOpen, onCloseMobile }) => {
     { id: 'sales', label: 'Sales History', icon: Receipt, roles: ['Admin', 'Sales Staff'] },
     { id: 'customers', label: 'Customers', icon: Users, roles: ['Admin', 'Sales Staff'] },
     { id: 'reports', label: 'Reports', icon: BarChart3, roles: ['Admin'] },
-    { id: 'settings', label: 'Settings', icon: Settings, roles: ['Admin'] },
   ];
 
   const userRole = currentUser?.role || 'Admin';
