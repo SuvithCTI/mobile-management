@@ -54,7 +54,28 @@ export const AppProvider = ({ children }) => {
   const [users, setUsers] = useState(() => {
     const saved = loadStorage('users', null);
     if (Array.isArray(saved) && saved.length > 0) {
-      return saved;
+      const updatedUsers = [...saved];
+      initialUsers.forEach((initUser) => {
+        const idx = updatedUsers.findIndex(
+          (u) =>
+            u.id === initUser.id ||
+            u.email?.toLowerCase() === initUser.email?.toLowerCase() ||
+            (u.role === initUser.role && !u.email)
+        );
+        if (idx === -1) {
+          updatedUsers.push(initUser);
+        } else {
+          if (!updatedUsers[idx].email) {
+            updatedUsers[idx] = {
+              ...updatedUsers[idx],
+              email: initUser.email,
+              username: initUser.email,
+              password: updatedUsers[idx].password || initUser.password
+            };
+          }
+        }
+      });
+      return updatedUsers;
     }
     return initialUsers;
   });
@@ -107,17 +128,49 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Authentication Helpers (supports email or username matching)
+  // Authentication Helpers (supports email or username matching with mobile whitespace tolerance)
   const login = (identifier, password) => {
     const cleanId = (identifier || '').trim().toLowerCase();
-    const user = users.find(
-      (u) =>
-        (u.email?.toLowerCase() === cleanId ||
-         u.username?.toLowerCase() === cleanId ||
-         (cleanId === 'admin' && u.role === 'Admin') ||
-         (cleanId === 'staff' && u.role === 'Sales Staff')) &&
-        u.password === password
-    );
+    const cleanPass = (password || '').trim();
+
+    // 1. Check existing users in state
+    let user = users.find((u) => {
+      const uEmail = (u.email || u.username || '').toLowerCase().trim();
+      const uPass = (u.password || '').trim();
+      const idMatch =
+        uEmail === cleanId ||
+        (cleanId === 'admin' && u.role === 'Admin') ||
+        (cleanId === 'admin@gmail.com' && u.role === 'Admin') ||
+        (cleanId === 'staff' && u.role === 'Sales Staff') ||
+        (cleanId === 'staff@gmail.com' && u.role === 'Sales Staff');
+      
+      const passMatch = uPass === cleanPass || u.password === password;
+      return idMatch && passMatch;
+    });
+
+    // 2. Fallback check against default baseline credentials
+    if (!user) {
+      const defaultMatch = initialUsers.find((initU) => {
+        const initEmail = (initU.email || initU.username || '').toLowerCase().trim();
+        const initPass = (initU.password || '').trim();
+        const idMatch =
+          initEmail === cleanId ||
+          (cleanId === 'admin' && initU.role === 'Admin') ||
+          (cleanId === 'staff' && initU.role === 'Sales Staff');
+        const passMatch = initPass === cleanPass || initPass.toLowerCase() === cleanPass.toLowerCase();
+        return idMatch && passMatch;
+      });
+
+      if (defaultMatch) {
+        user = defaultMatch;
+        setUsers((prev) => {
+          const exists = prev.some((u) => u.id === defaultMatch.id || u.email?.toLowerCase() === defaultMatch.email.toLowerCase());
+          if (!exists) return [...prev, defaultMatch];
+          return prev.map((u) => (u.id === defaultMatch.id ? defaultMatch : u));
+        });
+      }
+    }
+
     if (user) {
       if (user.status === 'Inactive') {
         notify('This account is currently disabled/inactive. Please contact the administrator.', 'error');

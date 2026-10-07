@@ -23,13 +23,16 @@ export const Login = () => {
     setErrorMsg('');
     setLoading(true);
 
+    const cleanEmail = email.trim();
+    const cleanPassword = password.trim();
+
     setTimeout(() => {
-      const res = login(email, password);
+      const res = login(cleanEmail, cleanPassword);
       if (!res?.success) {
         setErrorMsg('Invalid email or password. Please check your credentials.');
       }
       setLoading(false);
-    }, 250);
+    }, 200);
   };
 
   return (
@@ -80,6 +83,10 @@ export const Login = () => {
                 <input
                   type="email"
                   required
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="e.g. admin@gmail.com"
@@ -98,6 +105,10 @@ export const Login = () => {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
