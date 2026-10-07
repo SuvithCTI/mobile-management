@@ -417,17 +417,17 @@ export const Reports = () => {
           </span>
         </div>
 
-        <div className="h-64 w-full">
+        <div className="h-60 sm:h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+            <BarChart data={monthlyData} margin={{ top: 10, right: 5, left: -15, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="month" stroke="#000000" fontSize={11} fontWeight={600} />
-              <YAxis stroke="#000000" fontSize={11} fontWeight={600} />
+              <XAxis dataKey="month" stroke="#000000" fontSize={10} fontWeight={600} tickLine={false} />
+              <YAxis stroke="#000000" fontSize={10} fontWeight={600} tickLine={false} />
               <Tooltip
-                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#000000', borderRadius: '8px', color: '#000000', fontSize: '12px', fontWeight: 600 }}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#000000', borderRadius: '8px', color: '#000000', fontSize: '11px', fontWeight: 600 }}
                 formatter={(val) => [`${storeSettings.currency}${Number(val).toLocaleString()}`]}
               />
-              <Legend wrapperStyle={{ fontSize: '12px', color: '#000000', fontWeight: 600 }} />
+              <Legend wrapperStyle={{ fontSize: '11px', color: '#000000', fontWeight: 600 }} />
               <Bar dataKey="revenue" name="Total Revenue" fill="#38bdf8" radius={[4, 4, 0, 0]} />
               <Bar dataKey="profit" name="Gross Profit" fill="#f472b6" radius={[4, 4, 0, 0]} />
             </BarChart>

@@ -174,71 +174,133 @@ export const Purchases = () => {
         </div>
       </div>
 
-      {/* Clean & Simple Purchases Table */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-black font-extrabold uppercase text-[10px] tracking-wider border-b border-slate-200">
-              <tr>
-                <th className="py-3 px-4">Bill / PO #</th>
-                <th className="py-3 px-4">Date</th>
-                <th className="py-3 px-4">Supplier Details</th>
-                <th className="py-3 px-4">Items Purchased</th>
-                <th className="py-3 px-4">Payment Mode</th>
-                <th className="py-3 px-4 text-right">Total Amount</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredPurchases.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="py-8 text-center text-black font-bold text-xs">
-                    No purchase records found.
-                  </td>
-                </tr>
-              ) : (
-                filteredPurchases.map((po) => (
-                  <tr key={po.id} className="hover:bg-sky-50/40 transition">
-                    <td className="py-3.5 px-4 font-mono font-extrabold text-sky-800 text-xs">
+      {/* Purchases List: Mobile Cards + Desktop Table */}
+      <div className="space-y-3">
+        {/* Mobile View: Cards */}
+        <div className="md:hidden space-y-3">
+          {filteredPurchases.length === 0 ? (
+            <div className="p-6 text-center bg-white rounded-2xl border border-slate-200 text-black font-bold text-xs">
+              No purchase records found.
+            </div>
+          ) : (
+            filteredPurchases.map((po) => (
+              <div
+                key={po.id}
+                className="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs space-y-2.5"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="font-mono font-extrabold text-sky-800 text-xs block">
                       {po.billNumber}
-                    </td>
-                    <td className="py-3.5 px-4 text-black font-semibold whitespace-nowrap">
-                      {new Date(po.date).toLocaleDateString()}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <div className="font-extrabold text-black text-xs">{po.supplierName}</div>
-                      <div className="text-[10px] text-black font-semibold">
-                        {po.supplierContact ? `Tel: ${po.supplierContact}` : ''}
-                        {po.supplierGst ? ` • GST: ${po.supplierGst}` : ''}
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-4 max-w-sm">
-                      <div className="space-y-1">
-                        {po.items.map((item, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5 flex-wrap text-black">
-                            <span className="font-bold text-black">{item.name}</span>
-                            <span className="px-1.5 py-0.2 bg-slate-100 text-black font-mono font-extrabold rounded border border-slate-300 text-[10px]">
-                              {item.qty} pcs
-                            </span>
-                            <span className="text-[10px] font-mono text-slate-600">
-                              (@ {storeSettings.currency}{item.unitCost?.toLocaleString()})
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="px-2 py-0.5 bg-slate-100 text-black border border-slate-300 rounded-md font-bold text-[10px]">
-                        {po.paymentMethod}
+                    </span>
+                    <h4 className="font-extrabold text-slate-900 text-xs mt-0.5">
+                      {po.supplierName}
+                    </h4>
+                    {po.supplierContact && (
+                      <span className="text-[10px] text-slate-500 block font-medium">
+                        Tel: {po.supplierContact} {po.supplierGst ? `• GST: ${po.supplierGst}` : ''}
                       </span>
-                    </td>
-                    <td className="py-3.5 px-4 text-right font-mono font-extrabold text-black text-xs whitespace-nowrap">
+                    )}
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-semibold shrink-0">
+                    {new Date(po.date).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <div className="p-2.5 bg-slate-50 rounded-xl space-y-1.5 border border-slate-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Items Purchased</span>
+                  {po.items.map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-xs gap-2">
+                      <span className="font-semibold text-slate-800 truncate">{item.name}</span>
+                      <span className="font-mono font-bold text-slate-700 shrink-0 text-[11px]">
+                        {item.qty} pcs
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-xs">
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md font-bold text-[10px]">
+                    {po.paymentMethod}
+                  </span>
+                  <div className="text-right">
+                    <span className="text-[10px] text-slate-400 block font-semibold">Total Amount</span>
+                    <span className="font-mono font-black text-slate-900 text-sm">
                       {storeSettings.currency}{po.totalAmount?.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop View: Clean Table */}
+        <div className="hidden md:block bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 text-black font-extrabold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                <tr>
+                  <th className="py-3 px-4">Bill / PO #</th>
+                  <th className="py-3 px-4">Date</th>
+                  <th className="py-3 px-4">Supplier Details</th>
+                  <th className="py-3 px-4">Items Purchased</th>
+                  <th className="py-3 px-4">Payment Mode</th>
+                  <th className="py-3 px-4 text-right">Total Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredPurchases.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="py-8 text-center text-black font-bold text-xs">
+                      No purchase records found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredPurchases.map((po) => (
+                    <tr key={po.id} className="hover:bg-sky-50/40 transition">
+                      <td className="py-3.5 px-4 font-mono font-extrabold text-sky-800 text-xs">
+                        {po.billNumber}
+                      </td>
+                      <td className="py-3.5 px-4 text-black font-semibold whitespace-nowrap">
+                        {new Date(po.date).toLocaleDateString()}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <div className="font-extrabold text-black text-xs">{po.supplierName}</div>
+                        <div className="text-[10px] text-black font-semibold">
+                          {po.supplierContact ? `Tel: ${po.supplierContact}` : ''}
+                          {po.supplierGst ? ` • GST: ${po.supplierGst}` : ''}
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 max-w-sm">
+                        <div className="space-y-1">
+                          {po.items.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-1.5 flex-wrap text-black">
+                              <span className="font-bold text-black">{item.name}</span>
+                              <span className="px-1.5 py-0.2 bg-slate-100 text-black font-mono font-extrabold rounded border border-slate-300 text-[10px]">
+                                {item.qty} pcs
+                              </span>
+                              <span className="text-[10px] font-mono text-slate-600">
+                                (@ {storeSettings.currency}{item.unitCost?.toLocaleString()})
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="px-2 py-0.5 bg-slate-100 text-black border border-slate-300 rounded-md font-bold text-[10px]">
+                          {po.paymentMethod}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right font-mono font-extrabold text-black text-xs whitespace-nowrap">
+                        {storeSettings.currency}{po.totalAmount?.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

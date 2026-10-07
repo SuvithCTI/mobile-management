@@ -22,6 +22,14 @@ export const MainApp = () => {
   const { currentUser, activeTab } = useApp();
   const [selectedInvoiceForModal, setSelectedInvoiceForModal] = useState(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const mainContentRef = React.useRef(null);
+
+  // Automatically scroll main content area to top whenever active tab / page changes
+  React.useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
 
   if (!currentUser) {
     return <Login />;
@@ -68,8 +76,11 @@ export const MainApp = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden h-full">
         <Header onToggleMobileMenu={() => setIsMobileSidebarOpen((prev) => !prev)} />
 
-        <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-7 overscroll-contain touch-pan-y">
-          <div className="max-w-7xl mx-auto">{renderActivePage()}</div>
+        <main
+          ref={mainContentRef}
+          className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-5 lg:p-7 pb-28 sm:pb-8 overscroll-contain touch-pan-y"
+        >
+          <div className="max-w-7xl mx-auto w-full">{renderActivePage()}</div>
         </main>
       </div>
 

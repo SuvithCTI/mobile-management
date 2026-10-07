@@ -4,7 +4,18 @@
 
 @layer base {
   html {
-    font-size: 18px;
+    font-size: 15px;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (min-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+  @media (min-width: 1280px) {
+    html {
+      font-size: 16.5px;
+    }
   }
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -13,20 +24,21 @@
     -webkit-font-smoothing: antialiased;
     font-size: 1rem;
     line-height: 1.5;
+    overflow-x: hidden;
   }
   .font-mono {
     font-family: 'JetBrains Mono', monospace;
   }
 
-  /* Boost readability for micro badge font sizes */
+  /* Micro badge font sizes */
   .text-\[9px\] {
-    font-size: 11.5px !important;
+    font-size: 10px !important;
   }
   .text-\[10px\] {
-    font-size: 12.5px !important;
+    font-size: 11px !important;
   }
   .text-\[11px\] {
-    font-size: 13.5px !important;
+    font-size: 12px !important;
   }
 }
 
@@ -36,20 +48,34 @@ main, .overflow-y-auto {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar with soft sky blue thumb */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Desktop Only Custom scrollbar */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #bae6fd;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #38bdf8;
+  }
 }
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #bae6fd;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #38bdf8;
+
+/* Mobile: Disable custom scrollbars completely to prevent blue edge bleeding */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    height: 0px !important;
+  }
+  * {
+    scrollbar-width: none !important;
+  }
 }
 
 /* Soft color utility classes */
